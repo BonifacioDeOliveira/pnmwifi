@@ -1,6 +1,4 @@
 import os
-import sys
-import subprocess
 
 class pnmwifi:
 
@@ -13,17 +11,18 @@ class pnmwifi:
 
     # List available networks
     def get_networks(self, debug=False):
-        commands = ["sudo ifconfig wlo1 up && sudo iwlist wlo1 scan | grep ESSID > arquivinho.txt"]
+        commands = ['sudo ifconfig wlo1 up && sudo iwlist wlo1 scan | grep ESSID']
         if self.current_os == "ubuntu":
-            p = subprocess.run(commands[0], shell=True, stderr=subprocess.PIPE)
-            while True:
-                out = p.stderr.read(1)
-                if out == '' and p.poll() != None:
-                    break
-                if out != '':
-                    sys.stdout.write(out)
-                    sys.stdout.flush()
-        pass
+            #p = subprocess.run(commands[0], shell=True, stderr=subprocess.PIPE)
+            networks = []
+            command_return = os.popen(commands[0]).read()
+            no_processed_return = command_return.split("\"")
+            processed_return = self.list_elements_to_string(no_processed_return)
+            for network in processed_return:
+                if network.find("ESSID") == -1:
+                    networks.append(network)
+
+        return(networks)
 
     # List available network interfaces
     def get_network_interfaces(self): 
@@ -44,5 +43,11 @@ class pnmwifi:
             self.current_os = "raspibian"
         pass
 
+    def list_elements_to_string(self, original_list):
+        string_list = []
+        for element in original_list:
+            string_list.append(str(element))
+        return string_list
+
 pnm_wifi = pnmwifi()
-pnm_wifi.get_networks()
+print(pnm_wifi.get_networks())
