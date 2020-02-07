@@ -1,19 +1,18 @@
 import os
 
+
 class pnmwifi:
 
     def __init__(self):
-        self.current_os = None # Current os of host machine
-        self.root_user = False # Allow or disallow use commands as root
-        self.sudo_password = "123456" # Solve password problem
-        self.get_current_os() # Set current_os value 
+        self.current_os = None  # Current os of host machine
+        self.root_user = False  # Allow or disallow use commands as root
+        self.get_current_os()  # Set current_os value
         pass
 
     # List available networks
     def get_networks(self, debug=False):
         commands = ['sudo ifconfig wlo1 up && sudo iwlist wlo1 scan | grep ESSID']
         if self.current_os == "ubuntu":
-            #p = subprocess.run(commands[0], shell=True, stderr=subprocess.PIPE)
             networks = []
             command_return = os.popen(commands[0]).read()
             no_processed_return = command_return.split("\"")
@@ -25,7 +24,7 @@ class pnmwifi:
         return(networks)
 
     # List available network interfaces
-    def get_network_interfaces(self): 
+    def get_network_interfaces(self):
         pass
 
     # Set self.root_user value to True or False
