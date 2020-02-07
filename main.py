@@ -45,6 +45,7 @@ class pnmwifi:
         if(os_info.find('Ubuntu') != -1):
             self.current_os = "ubuntu"
         if(os_info.find('raspberrypi') != -1):
+
             self.current_os = "raspberrypi"
         pass
 
