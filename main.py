@@ -11,15 +11,18 @@ class pnmwifi:
 
     # List available networks
     def get_networks(self, debug=False):
-        commands = ['sudo ifconfig wlo1 up && sudo iwlist wlo1 scan | grep ESSID']
+        commands = ['sudo ifconfig wlo1 up && sudo iwlist wlo1 scan | grep ESSID',
+                    'sudo ifconfig wlan0 up && sudo iwlist wlan0 scan | grep ESSID']
+        networks = []
         if self.current_os == "ubuntu":
-            networks = []
             command_return = os.popen(commands[0]).read()
-            no_processed_return = command_return.split("\"")
-            processed_return = self.list_elements_to_string(no_processed_return)
-            for network in processed_return:
-                if network.find("ESSID") == -1:
-                    networks.append(network)
+        if self.current_os == "raspberrypi":
+            command_return = os.popen(commands[1]).read()
+        no_processed_return = command_return.split("\"")
+        processed_return = self.list_elements_to_string(no_processed_return)
+        for network in processed_return:
+            if network.find("ESSID") == -1 and network.find("\n") == -1:
+                networks.append(network)
 
         return(networks)
 
@@ -38,8 +41,8 @@ class pnmwifi:
         os_info = str(os.uname())
         if(os_info.find("Ubuntu")):
             self.current_os = "ubuntu"
-        elif(os_info.find("raspberrypi")):
-            self.current_os = "raspibian"
+        if(os_info.find("raspberrypi")):
+            self.current_os = "raspberrypi"
         pass
 
     def list_elements_to_string(self, original_list):
