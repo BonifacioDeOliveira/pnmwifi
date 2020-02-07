@@ -22,7 +22,7 @@ class pnmwifi:
         if self.debug_mode:
             print(command_return)
         no_processed_return = command_return.split("\"")
-        processed_return = self.list_elements_to_string(no_processed_return)
+        processed_return = self.set_list_elements(no_processed_return)
         for network in processed_return:
             if network.find("ESSID") == -1 and network.find("\n") == -1:
                 networks.append(network)
@@ -48,10 +48,13 @@ class pnmwifi:
             self.current_os = "raspberrypi"
         pass
 
-    def list_elements_to_string(self, original_list):
+    def set_list_elements(self, original_list):
         string_list = []
         for element in original_list:
-            string_list.append(str(element))
+            element = str(element)
+            if element != '':
+                string_list.append(element)
+        string_list = list(dict.fromkeys(string_list))
         return string_list
 
 pnm_wifi = pnmwifi()
