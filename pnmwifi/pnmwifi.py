@@ -1,4 +1,5 @@
 import os
+import re
 
 
 class pnmwifi:
@@ -42,15 +43,21 @@ class pnmwifi:
         if self.debug_mode:
             print(command_return)
         no_processed_return = command_return.split(":")
-        print(no_processed_return)
-        '''
-        processed_return = self.set_list_elements(no_processed_return)
-        for interface in processed_return:
-            if interface.find("ESSID") == -1 and interface.find("\n") == -1:
-                interfaces.append(network)
-
+        interfaces = self.split_get_interfaces(command_return)
         return(interfaces)        
-        '''
+        
+    # Makes get_interfaces text treatment
+    def split_get_interfaces(self, original_list):
+        interfaces_list = []
+        no_new_line_list = original_list.splitlines()
+        for line in no_new_line_list:
+            interface = line.split(":")
+            try:
+                first = int(interface[0])
+                interfaces_list.append(interface[1])
+            except:
+                continue 
+        return interfaces_list
 
     # List available network interfaces
     def get_network_interfaces(self):
@@ -88,5 +95,4 @@ class pnmwifi:
         pass
 
 pnm_wifi = pnmwifi()
-pnm_wifi.get_interfaces()
-
+print(pnm_wifi.get_interfaces())
