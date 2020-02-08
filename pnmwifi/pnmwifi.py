@@ -29,6 +29,29 @@ class pnmwifi:
 
         return(networks)
 
+    # List interfaces
+    def get_interfaces(self):
+        commands = ['ip link show']
+        interfaces = []
+        if self.current_os == "ubuntu":
+            command_return = os.popen(commands[0]).read()
+        '''
+        if self.current_os == "raspberrypi":
+            command_return = os.popen(commands[1]).read()
+        '''
+        if self.debug_mode:
+            print(command_return)
+        no_processed_return = command_return.split(":")
+        print(no_processed_return)
+        '''
+        processed_return = self.set_list_elements(no_processed_return)
+        for interface in processed_return:
+            if interface.find("ESSID") == -1 and interface.find("\n") == -1:
+                interfaces.append(network)
+
+        return(interfaces)        
+        '''
+
     # List available network interfaces
     def get_network_interfaces(self):
         pass
@@ -58,5 +81,12 @@ class pnmwifi:
         string_list = list(dict.fromkeys(string_list))
         return string_list
 
+    def authors(self):
+        print("BONIFACIO WAS WERE !!!")
+        print("BENILTON WAS HERE !!!")
+        print("Package created by the two jedi masters above at LUDUS laboratory.")
+        pass
+
 pnm_wifi = pnmwifi()
-print(pnm_wifi.get_networks())
+pnm_wifi.get_interfaces()
+
